@@ -501,6 +501,30 @@
             return dateStr;
         }
         
+        // 参加日から経過月数を計算
+        function getMonthsSinceVisit(visitDateStr) {
+            if (!visitDateStr || visitDateStr === '日付不明') return null;
+            
+            // 日付から年月日を抽出
+            const yearMatch = visitDateStr.match(/(\d{4})年(\d+)月(\d+)日/);
+            const slashMatch = visitDateStr.match(/(\d{4})\/(\d{1,2})\/(\d{1,2})/);
+            
+            let visitDate;
+            if (yearMatch) {
+                visitDate = new Date(parseInt(yearMatch[1]), parseInt(yearMatch[2]) - 1, parseInt(yearMatch[3]));
+            } else if (slashMatch) {
+                visitDate = new Date(parseInt(slashMatch[1]), parseInt(slashMatch[2]) - 1, parseInt(slashMatch[3]));
+            } else {
+                return null;
+            }
+            
+            const now = new Date();
+            const monthsDiff = (now.getFullYear() - visitDate.getFullYear()) * 12 
+                             + (now.getMonth() - visitDate.getMonth());
+            
+            return monthsDiff;
+        }
+        
         function showVisitors() {
             const select = document.getElementById('introducerSelect');
             const selectedValue = select.value;
@@ -647,6 +671,38 @@
             const visitorName = visitor.name || 'ビジター';
             const connections = visitor.connections || 'ビジネスパートナー';
             const field = visitor.field || 'ビジネス';
+            
+            // 経過月数を確認
+            const monthsSince = getMonthsSinceVisit(visitDateStr);
+            
+            // 1年以上経過している場合
+            if (monthsSince && monthsSince >= 12) {
+                return `${visitorName} 様
+
+ご無沙汰しております。
+BNI Realizeチャプターの${introducerName}です。
+
+${visitDateStr.match(/\d+年\d+月/) ? visitDateStr.match(/(\d+年\d+月)/)[1] : visitMonth}の定例会にご参加いただき、ありがとうございました。
+${field !== '未記入' && field ? `${field}としてご活躍されていらっしゃることと思います。` : ''}
+
+この度、当チャプターに新たな専門家が複数加わり、
+以前よりも多彩な業種との交流が活発になっております。
+
+前回とは異なるメンバー構成となっておりますので、
+新たなご縁やビジネスの可能性を感じていただけるかと思います。
+
+▼ メンバーリスト（事前にご確認ください）
+※気になる業種やお繋ぎしたい方がいれば、事前にご連絡ください。個別にご紹介も可能です。
+https://drive.google.com/file/d/1ejRDmTGNeHSxRmw5Gv04xk_pGtRMtPKz/view?usp=drive_link
+  
+また、当日は沢山のビジター様も参加予定ですので、
+Realizeチャプター以外の方とも交流いただける貴重な機会となっております。
+
+ご都合の良い金曜日がありましたら、是非ご参加頂ければと思うのですが、
+ご都合いかがでしょうか？
+
+${introducerName}`;
+            }
             
             if (visitor.interest === 'high') {
                 return `${visitorName}様
