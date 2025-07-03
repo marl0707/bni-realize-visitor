@@ -645,15 +645,14 @@
             // 経過月数を確認
             const monthsSince = getMonthsSinceVisit(visitDateStr);
             
-            // 1年以上経過している場合
-            if (monthsSince && monthsSince >= 12) {
-                return `${visitorName} 様
+            // 3ヶ月以上経過している場合
+            if (monthsSince && monthsSince >= 3) {
+                return `${visitorName}様
 
 ご無沙汰しております。
 BNI Realizeチャプターの${introducerName}です。
 
 ${visitDateStr.match(/\d+年\d+月/) ? visitDateStr.match(/(\d+年\d+月)/)[1] : visitMonth}の定例会にご参加いただき、ありがとうございました。
-${field !== '未記入' && field ? `${field}としてご活躍されていらっしゃることと思います。` : ''}
 
 この度、当チャプターに新たな専門家が複数加わり、
 以前よりも多彩な業種との交流が活発になっております。
@@ -664,36 +663,7 @@ ${field !== '未記入' && field ? `${field}としてご活躍されていらっ
 ▼ メンバーリスト（事前にご確認ください）
 ※気になる業種やお繋ぎしたい方がいれば、事前にご連絡ください。個別にご紹介も可能です。
 https://drive.google.com/file/d/1ejRDmTGNeHSxRmw5Gv04xk_pGtRMtPKz/view?usp=drive_link
-  
-また、当日は沢山のビジター様も参加予定ですので、
-Realizeチャプター以外の方とも交流いただける貴重な機会となっております。
 
-ご都合の良い金曜日がありましたら、是非ご参加頂ければと思うのですが、
-ご都合いかがでしょうか？
-
-${introducerName}`;
-            }
-            
-            // 3ヶ月〜1年未満の場合
-            if (monthsSince && monthsSince >= 3 && monthsSince < 12) {
-                return `${visitorName} 様
-
-ご無沙汰しております。
-BNI Realizeチャプターの${introducerName}です。
-
-${visitDateStr.match(/\d+年\d+月/) ? visitDateStr.match(/(\d+年\d+月)/)[1] : visitMonth}の定例会にご参加いただき、ありがとうございました。
-${field !== '未記入' && field ? `${field}としてご活躍されていらっしゃることと思います。` : ''}
-
-この度、当チャプターに新たな専門家が複数加わり、
-以前よりも多彩な業種との交流が活発になっております。
-
-前回とは異なるメンバー構成となっておりますので、
-新たなご縁やビジネスの可能性を感じていただけるかと思います。
-
-▼ メンバーリスト（事前にご確認ください）
-※気になる業種やお繋ぎしたい方がいれば、事前にご連絡ください。個別にご紹介も可能です。
-https://drive.google.com/file/d/1ejRDmTGNeHSxRmw5Gv04xk_pGtRMtPKz/view?usp=drive_link
-  
 また、当日は沢山のビジター様も参加予定ですので、
 Realizeチャプター以外の方とも交流いただける貴重な機会となっております。
 
@@ -704,91 +674,32 @@ ${introducerName}`;
             }
             
             // 3ヶ月以内の場合
-            if (monthsSince && monthsSince < 3) {
-                return `${visitorName} 様 
-
-先日は、BNI Realizeチャプターの定例会にご参加いただき、誠にありがとうございました。 
-
-${field !== '未記入' && field ? `${field}としてのお話、大変興味深く、メンバーからも「ぜひ、もっと詳しくお話を伺いたい」という声が上がっておりました。` : ''}
-
-先日の例会以降も私たちのチャプターは活発に動いており、新しい専門家も加わりました。 
-
-前回とはまた違った新たなご縁やビジネスの可能性も感じていただけるかと存じます。 
-
-▼ 最新のメンバーリスト（よろしければ、ご確認ください） 
-
-※前回お話ししてみて気になった方や、新たにご興味のある方がいらっしゃいましたら、ぜひ事前にお知らせください。個別にご紹介も可能です。 
-
-https://drive.google.com/file/d/1ejRDmTGNeHSxRmw5Gv04xk_pGtRMtPKz/view?usp=drive_link 
-
-また、当日は他にも多くのビジター様が参加される予定です。 
-
-メンバー以外の方とも交流いただける貴重な機会となっておりますので、ぜひご活用ください。 
-
-ご都合の良い金曜日がありましたら、是非ご参加頂ければと思うのですが、
-ご都合いかがでしょうか？
-
-${introducerName}`;
-            }
-            
-            // デフォルト（確度別のメッセージ）
-            if (visitor.interest === 'high') {
-                return `${visitorName}様
-
-お世話になっております。
-BNI Realizeチャプターの${introducerName}です。
-
-${visitDateStr.match(/\d+年\d+月/) ? visitDateStr.match(/(\d+年\d+月)/)[1] : visitMonth}定例会にご参加いただき、ありがとうございました。
-${connections !== '未記入' && connections ? `その際、${connections}の方との繋がりをお求めだったと記憶しております。` : ''}
-
-現在、当チャプターには新たなメンバーも加入され、
-より一層ビジネスマッチングの機会が広がっております。
-
-${field !== '未記入' && field ? `${visitorName}様の${field}のご経験は、
-きっと多くのメンバーにとって価値あるものになると確信しています。` : ''}
-
-近々の定例会にぜひ再度ご参加いただけないでしょうか？
-毎週金曜日の朝に開催しております。
-
-ご都合はいかがでしょうか？
-ご返信お待ちしております。
-
-BNI Realizeチャプター
-${introducerName}`;
-            } else if (visitor.interest === 'medium') {
+            else {
                 return `${visitorName}様
 
 ご無沙汰しております。
 BNI Realizeチャプターの${introducerName}です。
 
-${visitDateStr.match(/\d+年\d+月/) ? visitDateStr.match(/(\d+年\d+月)/)[1] : visitMonth}の見学会ではお会いできて嬉しかったです。
-${field !== '未記入' && field ? `${field}でのご活躍、素晴らしいですね。` : ''}
+先日は、BNI Realizeチャプターの定例会にご参加いただき、誠にありがとうございました。
 
-実は最近、新メンバーが加入し、
-ビジネスマッチングが活発になってきました。
+${field !== '未記入' && field ? `${field}としてのお話、大変興味深く、メンバーからも「ぜひ、もっと詳しくお話を伺いたい」という声が上がっておりました。` : ''}
 
-もう一度、定例会の雰囲気を体験してみませんか？
-前回とはまた違った出会いがあるかもしれません。
+先日の例会以降も私たちのチャプターは活発に動いており、新しい専門家も加わりました。
 
-ご都合の良い金曜日がございましたら、
-ぜひお越しください。
+前回とはまた違った新たなご縁やビジネスの可能性も感じていただけるかと存じます。
 
-${introducerName}`;
-            } else {
-                return `${visitorName}様
+▼ 最新のメンバーリスト（よろしければ、ご確認ください）
 
-こんにちは！BNI Realizeチャプターの${introducerName}です。
-お元気にされていますか？
+※前回お話ししてみて気になった方や、新たにご興味のある方がいらっしゃいましたら、ぜひ事前にお知らせください。個別にご紹介も可能です。
 
-${visitDateStr.match(/\d+年\d+月/) ? visitDateStr.match(/(\d+年\d+月)/)[1] : visitMonth}の見学会から時間が経ちましたが、
-最近のチャプターは新しいメンバーも増えて
-さらに活気づいています。
+https://drive.google.com/file/d/1ejRDmTGNeHSxRmw5Gv04xk_pGtRMtPKz/view?usp=drive_link
 
-もしお時間があるときに、
-また顔を出していただけると嬉しいです。
+また、当日は他にも多くのビジター様が参加される予定です。
 
-カジュアルな雰囲気で参加できますので、
-お気軽にお越しください😊
+メンバー以外の方とも交流いただける貴重な機会となっておりますので、ぜひご活用ください。
+
+ご都合の良い金曜日がありましたら、是非ご参加頂ければと思うのですが、
+ご都合いかがでしょうか？
 
 ${introducerName}`;
             }
@@ -809,9 +720,9 @@ ${introducerName}`;
             // 経過月数を確認
             const monthsSince = getMonthsSinceVisit(visitDateStr);
             
-            // 3ヶ月〜1年未満の場合
-            if (monthsSince && monthsSince >= 3 && monthsSince < 12) {
-                return `${visitorName} 様
+            // 3ヶ月以上経過している場合
+            if (monthsSince && monthsSince >= 3) {
+                return `${visitorName}様
 
 ご無沙汰しております。
 BNI Realizeチャプターの${introducerName}です。
@@ -836,7 +747,7 @@ ${field !== '未記入' && field ? `${field}の分野でご活躍の${visitorNam
 ▼ メンバーリスト（事前にご確認ください）
 ※気になる業種やお繋ぎしたい方がいれば、事前にご連絡ください。個別にご紹介も可能です。
 https://drive.google.com/file/d/1ejRDmTGNeHSxRmw5Gv04xk_pGtRMtPKz/view?usp=drive_link
-  
+
 また、当日は沢山のビジター様も参加予定ですので、
 Realizeチャプター以外の方とも交流いただける貴重な機会となっております。
 
@@ -852,120 +763,44 @@ ${introducerName}`;
             }
             
             // 3ヶ月以内の場合
-            if (monthsSince && monthsSince < 3) {
-                return `${visitorName} 様 
-
-BNI Realizeチャプターの${introducerName}です。
-
-先日は、BNI、REALIZEチャプター定例会にご参加頂きましてありがとうございました。
-
-この度、2025年7月25日（金）に特別イベント 
-「Business Open Day」を開催することとなりました！
-
-定例会とはまた違った雰囲気でメンバーや他のビジター様と繋がれる特別なイベントになりますので是非ご参加頂くことで、 ${visitorName}様のビジネスの発展に繋がる良い機会になると思いご連絡させて頂きました。
-
-通常よりもカジュアルな雰囲気で、 
-Realizeメンバーと多くビジター様が一堂に集う、 
-年に数回の特別なオープン交流会です。 
-
-当日は参加者間の交流の時間も通常の定例会よりも沢山ご用意させて頂きます。 
-${field !== '未記入' && field ? `${field}の分野でご活躍の${visitorName}様にとっても 
-「新たな出会いや案件のきっかけになる場」になるかと確信しています。` : `「新たな出会いや案件のきっかけになる場」になるかと確信しています。`}
-
-前回とは異なるメンバー構成となっておりますので、 
-新たなご縁やビジネスの可能性を感じていただけるかと思います。 
-
-▼ メンバーリスト（事前にご確認ください） 
-※気になる業種やお繋ぎしたい方がいれば、事前にご連絡ください。個別にご紹介も可能です。 
-https://drive.google.com/file/d/1ejRDmTGNeHSxRmw5Gv04xk_pGtRMtPKz/view?usp=drive_link 
-
-また、当日は沢山のビジター様も参加予定ですので、 
-Realizeチャプター以外の方とも交流いただける貴重な機会となっております。 
-
-ご興味のある業種や繋がりたい方がいれば、お知らせください。 
-私から責任をもってお繋ぎいたします。 
-
-ご関心をお持ちいただけましたら、 
-詳細をお送りしますので、お気軽にご連絡いただけますと幸いです。 
-
-7月25日(金)の朝のご都合いかがでしょうか？
-
-${introducerName}`;
-            }
-            
-            // デフォルト（確度別のメッセージ）
-            if (visitor.interest === 'high') {
-                return `${visitorName}様
-
-お世話になっております。
-BNI Realizeチャプターの${introducerName}です。
-
-${visitDateStr.match(/\d+年\d+月/) ? visitDateStr.match(/(\d+年\d+月)/)[1] : visitMonth}の定例会にご参加いただいた際、
-${connections !== '未記入' && connections ? `${connections}の方との繋がりをお求めだったかと思います。` : 'ビジネスマッチングにご興味をお持ちいただきました。'}
-
-実は、【2025年7月25日（金）】に
-「ビジネスオープンデイ」を開催することになりました！
-
-通常の定例会とは違い、より多くのビジネスパーソンが集まる
-特別なネットワーキングイベントです。
-
-${field !== '未記入' && field ? `${field}のプロフェッショナルである${visitorName}様に
-ぜひご参加いただきたく、ご連絡いたしました。` : `${visitorName}様にぜひご参加いただきたく、ご連絡いたしました。`}
-
-${connections !== '未記入' && connections ? `当日は${connections}関連の方も多数参加予定です。` : ''}
-新たなビジネスチャンスが見つかる絶好の機会です。
-
-ご都合はいかがでしょうか？
-ご参加いただける場合は、詳細をお送りいたします。
-
-BNI Realizeチャプター
-${introducerName}`;
-            } else if (visitor.interest === 'medium') {
+            else {
                 return `${visitorName}様
 
 ご無沙汰しております。
 BNI Realizeチャプターの${introducerName}です。
 
-${visitDateStr.match(/\d+年\d+月/) ? visitDateStr.match(/(\d+年\d+月)/)[1] : visitMonth}にお会いしてから時間が経ちましたが、
-お変わりありませんか？
+先日は、BNI、REALIZEチャプター定例会にご参加頂きましてありがとうございました。
 
-【2025年7月25日（金）】に特別イベント
-「ビジネスオープンデイ」を開催します！
+この度、2025年7月25日（金）に特別イベント
+「Business Open Day」を開催することとなりました！
 
-通常の定例会よりもカジュアルな雰囲気で、
-様々な業種の方と交流できる機会です。
+定例会とはまた違った雰囲気でメンバーや他のビジター様と繋がれる特別なイベントになりますので是非ご参加頂くことで、 ${visitorName}様のビジネスの発展に繋がる良い機会になると思いご連絡させて頂きました。
 
-${field !== '未記入' && field ? `${field}のご経験を活かして、
-新しいビジネスの可能性を探してみませんか？` : '新しいビジネスの可能性を探してみませんか？'}
+通常よりもカジュアルな雰囲気で、
+Realizeメンバーと多くビジター様が一堂に集う、
+年に数回の特別なオープン交流会です。
 
-ご興味がございましたら、
-ぜひご参加ください。
+当日は参加者間の交流の時間も通常の定例会よりも沢山ご用意させて頂きます。
+${field !== '未記入' && field ? `${field}の分野でご活躍の${visitorName}様にとっても
+「新たな出会いや案件のきっかけになる場」になるかと確信しています。` : `「新たな出会いや案件のきっかけになる場」になるかと確信しています。`}
 
-詳細をお送りしますので、
-お気軽にご連絡ください。
+前回とは異なるメンバー構成となっておりますので、
+新たなご縁やビジネスの可能性を感じていただけるかと思います。
 
-${introducerName}`;
-            } else {
-                return `${visitorName}様
+▼ メンバーリスト（事前にご確認ください）
+※気になる業種やお繋ぎしたい方がいれば、事前にご連絡ください。個別にご紹介も可能です。
+https://drive.google.com/file/d/1ejRDmTGNeHSxRmw5Gv04xk_pGtRMtPKz/view?usp=drive_link
 
-こんにちは！
-BNI Realizeチャプターの${introducerName}です。
+また、当日は沢山のビジター様も参加予定ですので、
+Realizeチャプター以外の方とも交流いただける貴重な機会となっております。
 
-お元気にされていますか？
+ご興味のある業種や繋がりたい方がいれば、お知らせください。
+私から責任をもってお繋ぎいたします。
 
-【2025年7月25日（金）】に
-「ビジネスオープンデイ」という
-楽しいイベントを開催します🎉
+ご関心をお持ちいただけましたら、
+詳細をお送りしますので、お気軽にご連絡いただけますと幸いです。
 
-普段の定例会とは違って、
-気軽に参加できる交流会です。
-
-美味しい軽食もご用意していますし、
-リラックスした雰囲気で
-新しい出会いを楽しめます。
-
-もしお時間があれば、
-ぜひ遊びに来てください😊
+7月25日(金)の朝のご都合いかがでしょうか？
 
 ${introducerName}`;
             }
