@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BNI Realizeチャプター ビジター管理システム（完全版）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+            margin: 0 auto;
+            max-width: 1400px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 0 0 10px 10px;
+        }
+        
+        .selector-section {
+            background-color: #e3f2fd;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid #90caf9;
+        }
+        
+        .selector-section h2 {
+            color: #1565c0;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .introducer-select {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #1976d2;
+            border-radius: 5px;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        .stats-summary {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff9c4;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .stats-summary strong {
+            color: #f57f17;
+        }
+        
+        .visitors-section {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .visitors-section h3 {
+            color: #424242;
+            margin-bottom: 20px;
+            font-size: 22px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        
+        .visitor-card {
+            background-color: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .visitor-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .visitor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .visitor-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1976d2;
+        }
+        
+        .interest-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .interest-high {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef5350;
+        }
+        
+        .interest-medium {
+            background-color: #fff3e0;
+            color: #e65100;
+            border: 1px solid #ff9800;
+        }
+        
+        .interest-low {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #66bb6a;
+        }
+        
+        .visitor-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-item {
+            font-size: 14px;
+            color: #616161;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            color: #424242;
+        }
+        
+        .message-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .message-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .regular-button {
+            background-color: #1976d2;
+            color: white;
+        }
+        
+        .regular-button:hover {
+            background-color: #0d47a1;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .bod-button {
+            background-color: #f57c00;
+            color: white;
+        }
+        
+        .bod-button:hover {
+            background-color: #e65100;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .message-display {
+            display: none;
+            margin-top: 20px;
+            background-color: #f0f7ff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #bbdefb;
+            position: relative;
+        }
+        
+        .message-display.show {
+            display: block;
+        }
+        
+        .message-type-label {
+            font-weight: bold;
+            color: #1565c0;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .message-text {
+            white-space: pre-wrap;
+            line-height: 1.8;
+            color: #333;
+            font-size: 14px;
+            padding-right: 100px;
+        }
+        
+        .copy-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-button:hover {
+            background-color: #45a049;
+        }
+        
+        .copy-button.copied {
+            background-color: #2196f3;
+        }
+        
+        .no-visitors {
+            text-align: center;
+            padding: 40px;
+            color: #757575;
+            font-size: 16px;
+        }
+        
+        .instructions {
+            background-color: #fff9c4;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 5px solid #f9a825;
+        }
+        
+        .instructions h4 {
+            color: #f57f17;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+            color: #616161;
+        }
+        
+        .instructions li {
+            margin: 5px 0;
+            line-height: 1.6;
+        }
+        
+        .data-info {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #4caf50;
+            text-align: center;
+            color: #2e7d32;
+        }
+        
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+</head>
+<body>
+    <div class="header">
+        <h1>BNI Realizeチャプター</h1>
+        <p>ビジター管理・再訪問促進システム（完全版）</p>
+    </div>
+    
+    <div class="container">
+        <div class="instructions">
+            <h4>📋 使い方</h4>
+            <ol>
+                <li>紹介者名を選択すると、過去に紹介したビジターが一覧表示されます</li>
+                <li>各ビジターの確度、参加日、詳細情報を確認できます</li>
+                <li>「通常再参加依頼」または「ビジネスオープンデイ招待」ボタンをクリック</li>
+                <li>表示されたメッセージをコピーしてLINEで送信してください</li>
+            </ol>
+        </div>
+        
+        <div class="data-info" id="dataInfo">
+            データ読み込み中...
+        </div>
+        
+        <div class="selector-section" id="selectorSection">
+            <h2>👤 紹介者を選択してください</h2>
+            <select class="introducer-select" id="introducerSelect" onchange="showVisitors()">
+                <option value="">-- 紹介者を選択 --</option>
+            </select>
+            
+            <div class="stats-summary" id="statsSummary"></div>
+        </div>
+        
+        <div class="visitors-section" id="visitorsSection">
+            <h3>📊 ビジター一覧</h3>
+            <div id="visitorsList"></div>
+        </div>
+    </div>
+    
+    <script>
+        // データ格納用変数
+        let visitorsData = {};
+        
+        // ページ読み込み時に自動的にCSVファイルを読み込む
+        window.addEventListener('DOMContentLoaded', function() {
+            fetch('visitor.csv')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('CSVファイルの読み込みに失敗しました');
+                    }
+                    return response.text();
+                })
+                .then(csvText => {
+                    Papa.parse(csvText, {
+                        header: true,
+                        skipEmptyLines: true,
+                        complete: function(results) {
+                            processCSVData(results.data);
+                        },
+                        error: function(error) {
+                            console.error('CSV解析エラー:', error);
+                            document.getElementById('dataInfo').innerHTML = 
+                                '<span style="color: #d32f2f;">CSVファイルの解析に失敗しました</span>';
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('ファイル読み込みエラー:', error);
+                    document.getElementById('dataInfo').innerHTML = 
+                        '<span style="color: #d32f2f;">visitor.csvファイルが見つかりません。ローカルサーバーを起動してアクセスしてください。</span>';
+                });
+        });
+        
+        // CSVデータ処理関数
+        function processCSVData(data) {
+            visitorsData = {};
+            const introducerSelect = document.getElementById('introducerSelect');
+            const selectorSection = document.getElementById('selectorSection');
+            
+            // 既存のオプションをクリア（最初の「選択してください」以外）
+            while (introducerSelect.options.length > 1) {
+                introducerSelect.remove(1);
+            }
+            
+            // データを紹介者ごとにグループ化
+            data.forEach(row => {
+                const introducerName = row['紹介者'];
+                
+                if (!introducerName || introducerName === '') return;
+                
+                if (!visitorsData[introducerName]) {
+                    visitorsData[introducerName] = {
+                        name: introducerName,
+                        visitors: []
+                    };
+                }
+                
+                // ビジター情報を追加
+                visitorsData[introducerName].visitors.push({
+                    name: row['参加者のお名前（漢字）'] || '',
+                    kana: row['参加者のお名前（ひらがな）'] || '',
+                    company: row['参加者の会社名（正式名）'] || '',
+                    field: row['参加者の専門分野'] || '',
+                    interest: convertInterestLevel(row['確度（関心度）']),
+                    interestOriginal: row['確度（関心度）'] || '',
+                    visitDate: formatDate(row['参加者の参加予定日']),
+                    connections: row['繋がりたい人脈(端的に)'] || '',
+                    email: row['メールアドレス'] || '',
+                    pr: row['PR文（事業内容、強み）100文字以内'] || '',
+                    category: row['参加者のカテゴリ（近しいものを選択）'] || ''
+                });
+            });
+            
+            // 紹介者をセレクトボックスに追加（ビジター数でソート）
+            const sortedIntroducers = Object.entries(visitorsData)
+                .sort((a, b) => b[1].visitors.length - a[1].visitors.length);
+            
+            sortedIntroducers.forEach(([key, data]) => {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = `${data.name} (${data.visitors.length}名)`;
+                introducerSelect.appendChild(option);
+            });
+            
+            // 統計情報を更新
+            const totalIntroducers = Object.keys(visitorsData).length;
+            const totalVisitors = data.length;
+            document.getElementById('dataInfo').innerHTML = 
+                `<strong>データ読み込み済み：</strong>紹介者 ${totalIntroducers}名、ビジター ${totalVisitors}名`;
+            
+        }
+        
+        // 確度レベルの変換
+        function convertInterestLevel(interest) {
+            if (!interest) return 'low';
+            const upperInterest = interest.toUpperCase();
+            if (upperInterest.includes('A：BNI') || upperInterest === 'A' || upperInterest === '高') {
+                return 'high';
+            } else if (upperInterest.includes('B：興味') || upperInterest === 'B' || upperInterest === '中') {
+                return 'medium';
+            }
+            return 'low';
+        }
+        
+        // 日付フォーマット
+        function formatDate(dateStr) {
+            if (!dateStr) return '日付不明';
+            
+            // 既に年が含まれている場合はそのまま返す
+            if (dateStr.includes('年')) return dateStr;
+            
+            // 2021/10/22 形式を変換
+            const slashMatch = dateStr.match(/(\d{4})\/(\d{1,2})\/(\d{1,2})/);
+            if (slashMatch) {
+                const year = slashMatch[1];
+                const month = parseInt(slashMatch[2]);
+                const day = parseInt(slashMatch[3]);
+                return `${year}年${month}月${day}日`;
+            }
+            
+            // 月日のみの場合、年を推定
+            const match = dateStr.match(/(\d+)月(\d+)日/);
+            if (match) {
+                const month = parseInt(match[1]);
+                const day = parseInt(match[2]);
+                const year = month >= 7 ? 2024 : 2025;
+                return `${year}年${month}月${day}日`;
+            }
+            
+            return dateStr;
+        }
+        
+        function showVisitors() {
+            const select = document.getElementById('introducerSelect');
+            const selectedValue = select.value;
+            const visitorsSection = document.getElementById('visitorsSection');
+            const statsSummary = document.getElementById('statsSummary');
+            const visitorsList = document.getElementById('visitorsList');
+            
+            if (!selectedValue) {
+                visitorsSection.style.display = 'none';
+                statsSummary.style.display = 'none';
+                return;
+            }
+            
+            const data = visitorsData[selectedValue];
+            if (!data || !data.visitors || data.visitors.length === 0) {
+                visitorsSection.style.display = 'none';
+                statsSummary.style.display = 'none';
+                statsSummary.innerHTML = '<strong>このデータにはビジターが登録されていません。</strong>';
+                statsSummary.style.display = 'block';
+                return;
+            }
+            
+            // 統計情報を表示
+            const highCount = data.visitors.filter(v => v.interest === 'high').length;
+            const mediumCount = data.visitors.filter(v => v.interest === 'medium').length;
+            const lowCount = data.visitors.filter(v => v.interest === 'low').length;
+            
+            statsSummary.innerHTML = `
+                <strong>紹介実績：</strong>合計 ${data.visitors.length}名 
+                （高確度：${highCount}名、中確度：${mediumCount}名、低確度：${lowCount}名）
+            `;
+            statsSummary.style.display = 'block';
+            
+            // ビジター一覧を表示（確度の高い順にソート）
+            const sortedVisitors = [...data.visitors].sort((a, b) => {
+                const interestOrder = { 'high': 0, 'medium': 1, 'low': 2 };
+                return interestOrder[a.interest] - interestOrder[b.interest];
+            });
+            
+            visitorsList.innerHTML = '';
+            sortedVisitors.forEach((visitor, index) => {
+                const visitorCard = createVisitorCard(visitor, data.name, selectedValue + '_' + index);
+                visitorsList.appendChild(visitorCard);
+            });
+            
+            visitorsSection.style.display = 'block';
+        }
+        
+        function createVisitorCard(visitor, introducerName, uniqueIndex) {
+            const card = document.createElement('div');
+            card.className = 'visitor-card';
+            
+            const interestClass = visitor.interest === 'high' ? 'interest-high' : 
+                                visitor.interest === 'medium' ? 'interest-medium' : 'interest-low';
+            const interestText = visitor.interestOriginal || 
+                               (visitor.interest === 'high' ? '高' : 
+                                visitor.interest === 'medium' ? '中' : '低');
+            
+            // PR文を短縮表示（100文字以上の場合）
+            const prText = visitor.pr && visitor.pr.length > 100 
+                         ? visitor.pr.substring(0, 100) + '...' 
+                         : visitor.pr;
+            
+            card.innerHTML = `
+                <div class="visitor-header">
+                    <div class="visitor-name">${visitor.name || '氏名不明'} 様</div>
+                    <span class="interest-badge ${interestClass}">確度：${interestText}</span>
+                </div>
+                <div class="visitor-details">
+                    <div class="detail-item">
+                        <span class="detail-label">会社名：</span>${visitor.company || '未記入'}
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">専門分野：</span>${visitor.field || '未記入'}
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">参加日：</span>${visitor.visitDate || '日付不明'}
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">繋がりたい人脈：</span>${visitor.connections || '未記入'}
+                    </div>
+                    ${visitor.pr ? `
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <span class="detail-label">PR文：</span>${prText}
+                    </div>` : ''}
+                    ${visitor.category ? `
+                    <div class="detail-item">
+                        <span class="detail-label">カテゴリ：</span>${visitor.category}
+                    </div>` : ''}
+                </div>
+                <div class="message-buttons">
+                    <button class="message-button regular-button" 
+                            onclick="showMessage('${uniqueIndex}', 'regular', '${introducerName.replace(/'/g, "\\'")}')">
+                        通常のビジター再参加依頼メッセージ
+                    </button>
+                    <button class="message-button bod-button" 
+                            onclick="showMessage('${uniqueIndex}', 'bod', '${introducerName.replace(/'/g, "\\'")}')">
+                        ビジネスオープンデイ招待メッセージ
+                    </button>
+                </div>
+                <div class="message-display" id="message-${uniqueIndex}"></div>
+            `;
+            
+            return card;
+        }
+        
+        function showMessage(visitorIndex, messageType, introducerName) {
+            // visitorIndexからintroducer keyとvisitor indexを分離
+            const [introducerKey, actualIndex] = visitorIndex.includes('_') 
+                ? visitorIndex.split('_') 
+                : [document.getElementById('introducerSelect').value, visitorIndex];
+            
+            const visitor = visitorsData[introducerKey].visitors[actualIndex];
+            const messageDisplay = document.getElementById(`message-${visitorIndex}`);
+            
+            let message = '';
+            let typeLabel = '';
+            
+            if (messageType === 'regular') {
+                typeLabel = '通常の再参加依頼メッセージ';
+                message = generateRegularMessage(visitor, introducerName);
+            } else {
+                typeLabel = 'ビジネスオープンデイ招待メッセージ';
+                message = generateBODMessage(visitor, introducerName);
+            }
+            
+            messageDisplay.innerHTML = `
+                <div class="message-type-label">${typeLabel}</div>
+                <button class="copy-button" onclick="copyMessage(this)">コピー</button>
+                <div class="message-text">${message}</div>
+            `;
+            
+            messageDisplay.classList.add('show');
+        }
+        
+        function generateRegularMessage(visitor, introducerName) {
+            // 日付から月を抽出
+            const visitDateStr = visitor.visitDate || '';
+            const monthMatch = visitDateStr.match(/(\d+)年(\d+)月/) || visitDateStr.match(/(\d+)月/);
+            const visitMonth = monthMatch 
+                ? (monthMatch[2] ? `${monthMatch[2]}月` : `${monthMatch[1]}月`)
+                : '先日';
+            
+            const visitorName = visitor.name || 'ビジター';
+            const connections = visitor.connections || 'ビジネスパートナー';
+            const field = visitor.field || 'ビジネス';
+            
+            if (visitor.interest === 'high') {
+                return `${visitorName}様
+
+お世話になっております。
+BNI Realizeチャプターの${introducerName}です。
+
+${visitMonth}の定例会にご参加いただき、ありがとうございました。
+${connections !== '未記入' && connections ? `その際、${connections}の方との繋がりをお求めだったと記憶しております。` : ''}
+
+現在、当チャプターには新たなメンバーも加入され、
+より一層ビジネスマッチングの機会が広がっております。
+
+${field !== '未記入' && field ? `${visitorName}様の${field}のご経験は、
+きっと多くのメンバーにとって価値あるものになると確信しています。` : ''}
+
+近々の定例会にぜひ再度ご参加いただけないでしょうか？
+毎週金曜日の朝に開催しております。
+
+ご都合はいかがでしょうか？
+ご返信お待ちしております。
+
+BNI Realizeチャプター
+${introducerName}`;
+            } else if (visitor.interest === 'medium') {
+                return `${visitorName}様
+
+ご無沙汰しております。
+BNI Realizeチャプターの${introducerName}です。
+
+${visitMonth}の見学会ではお会いできて嬉しかったです。
+${field !== '未記入' && field ? `${field}でのご活躍、素晴らしいですね。` : ''}
+
+実は最近、新メンバーが加入し、
+ビジネスマッチングが活発になってきました。
+
+もう一度、定例会の雰囲気を体験してみませんか？
+前回とはまた違った出会いがあるかもしれません。
+
+ご都合の良い金曜日がございましたら、
+ぜひお越しください。
+
+${introducerName}`;
+            } else {
+                return `${visitorName}様
+
+こんにちは！BNI Realizeチャプターの${introducerName}です。
+お元気にされていますか？
+
+${visitMonth}の見学会から時間が経ちましたが、
+最近のチャプターは新しいメンバーも増えて
+さらに活気づいています。
+
+もしお時間があるときに、
+また顔を出していただけると嬉しいです。
+
+カジュアルな雰囲気で参加できますので、
+お気軽にお越しください😊
+
+${introducerName}`;
+            }
+        }
+        
+        function generateBODMessage(visitor, introducerName) {
+            // 日付から月を抽出
+            const visitDateStr = visitor.visitDate || '';
+            const monthMatch = visitDateStr.match(/(\d+)年(\d+)月/) || visitDateStr.match(/(\d+)月/);
+            const visitMonth = monthMatch 
+                ? (monthMatch[2] ? `${monthMatch[2]}月` : `${monthMatch[1]}月`)
+                : '先日';
+            
+            const visitorName = visitor.name || 'ビジター';
+            const connections = visitor.connections || 'ビジネスパートナー';
+            const field = visitor.field || 'ビジネス';
+            
+            if (visitor.interest === 'high') {
+                return `${visitorName}様
+
+お世話になっております。
+BNI Realizeチャプターの${introducerName}です。
+
+${visitMonth}の定例会にご参加いただいた際、
+${connections !== '未記入' && connections ? `${connections}の方との繋がりをお求めだったかと思います。` : 'ビジネスマッチングにご興味をお持ちいただきました。'}
+
+実は、【2025年7月25日（金）】に
+「ビジネスオープンデイ」を開催することになりました！
+
+通常の定例会とは違い、より多くのビジネスパーソンが集まる
+特別なネットワーキングイベントです。
+
+${field !== '未記入' && field ? `${field}のプロフェッショナルである${visitorName}様に
+ぜひご参加いただきたく、ご連絡いたしました。` : `${visitorName}様にぜひご参加いただきたく、ご連絡いたしました。`}
+
+${connections !== '未記入' && connections ? `当日は${connections}関連の方も多数参加予定です。` : ''}
+新たなビジネスチャンスが見つかる絶好の機会です。
+
+ご都合はいかがでしょうか？
+ご参加いただける場合は、詳細をお送りいたします。
+
+BNI Realizeチャプター
+${introducerName}`;
+            } else if (visitor.interest === 'medium') {
+                return `${visitorName}様
+
+ご無沙汰しております。
+BNI Realizeチャプターの${introducerName}です。
+
+${visitMonth}にお会いしてから時間が経ちましたが、
+お変わりありませんか？
+
+【2025年7月25日（金）】に特別イベント
+「ビジネスオープンデイ」を開催します！
+
+通常の定例会よりもカジュアルな雰囲気で、
+様々な業種の方と交流できる機会です。
+
+${field !== '未記入' && field ? `${field}のご経験を活かして、
+新しいビジネスの可能性を探してみませんか？` : '新しいビジネスの可能性を探してみませんか？'}
+
+ご興味がございましたら、
+ぜひご参加ください。
+
+詳細をお送りしますので、
+お気軽にご連絡ください。
+
+${introducerName}`;
+            } else {
+                return `${visitorName}様
+
+こんにちは！
+BNI Realizeチャプターの${introducerName}です。
+
+お元気にされていますか？
+
+【2025年7月25日（金）】に
+「ビジネスオープンデイ」という
+楽しいイベントを開催します🎉
+
+普段の定例会とは違って、
+気軽に参加できる交流会です。
+
+美味しい軽食もご用意していますし、
+リラックスした雰囲気で
+新しい出会いを楽しめます。
+
+もしお時間があれば、
+ぜひ遊びに来てください😊
+
+${introducerName}`;
+            }
+        }
+        
+        function copyMessage(button) {
+            const messageText = button.parentElement.querySelector('.message-text').textContent;
+            
+            navigator.clipboard.writeText(messageText).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'コピーしました！';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                // フォールバック
+                const textArea = document.createElement('textarea');
+                textArea.value = messageText;
+                textArea.style.position = 'fixed';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    button.textContent = 'コピーしました！';
+                    button.classList.add('copied');
+                    
+                    setTimeout(() => {
+                        button.textContent = 'コピー';
+                        button.classList.remove('copied');
+                    }, 2000);
+                } catch (err) {
+                    console.error('コピーに失敗しました:', err);
+                }
+                
+                document.body.removeChild(textArea);
+            });
+        }
+    </script>
+</body>
+</html>
