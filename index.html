@@ -620,7 +620,7 @@
 お世話になっております。
 BNI Realizeチャプターの${introducerName}です。
 
-${visitMonth}の定例会にご参加いただき、ありがとうございました。
+${visitDateStr.match(/\d+年\d+月/) ? visitDateStr.match(/(\d+年\d+月)/)[1] : visitMonth}定例会にご参加いただき、ありがとうございました。
 ${connections !== '未記入' && connections ? `その際、${connections}の方との繋がりをお求めだったと記憶しております。` : ''}
 
 現在、当チャプターには新たなメンバーも加入され、
@@ -643,7 +643,7 @@ ${introducerName}`;
 ご無沙汰しております。
 BNI Realizeチャプターの${introducerName}です。
 
-${visitMonth}の見学会ではお会いできて嬉しかったです。
+${visitDateStr.match(/\d+年\d+月/) ? visitDateStr.match(/(\d+年\d+月)/)[1] : visitMonth}の見学会ではお会いできて嬉しかったです。
 ${field !== '未記入' && field ? `${field}でのご活躍、素晴らしいですね。` : ''}
 
 実は最近、新メンバーが加入し、
@@ -662,7 +662,7 @@ ${introducerName}`;
 こんにちは！BNI Realizeチャプターの${introducerName}です。
 お元気にされていますか？
 
-${visitMonth}の見学会から時間が経ちましたが、
+${visitDateStr.match(/\d+年\d+月/) ? visitDateStr.match(/(\d+年\d+月)/)[1] : visitMonth}の見学会から時間が経ちましたが、
 最近のチャプターは新しいメンバーも増えて
 さらに活気づいています。
 
@@ -694,7 +694,7 @@ ${introducerName}`;
 お世話になっております。
 BNI Realizeチャプターの${introducerName}です。
 
-${visitMonth}の定例会にご参加いただいた際、
+${visitDateStr.match(/\d+年\d+月/) ? visitDateStr.match(/(\d+年\d+月)/)[1] : visitMonth}の定例会にご参加いただいた際、
 ${connections !== '未記入' && connections ? `${connections}の方との繋がりをお求めだったかと思います。` : 'ビジネスマッチングにご興味をお持ちいただきました。'}
 
 実は、【2025年7月25日（金）】に
@@ -720,7 +720,7 @@ ${introducerName}`;
 ご無沙汰しております。
 BNI Realizeチャプターの${introducerName}です。
 
-${visitMonth}にお会いしてから時間が経ちましたが、
+${visitDateStr.match(/\d+年\d+月/) ? visitDateStr.match(/(\d+年\d+月)/)[1] : visitMonth}にお会いしてから時間が経ちましたが、
 お変わりありませんか？
 
 【2025年7月25日（金）】に特別イベント
