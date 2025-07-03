@@ -338,6 +338,39 @@
         // データ格納用変数
         let visitorsData = {};
         
+        // 名前の表記揺れを統一するマッピング
+        const nameMapping = {
+            // 阪本さんの表記揺れ
+            '阪本セイジ': '阪本清爾',
+            '阪本セーヂ': '阪本清爾',
+            
+            // 行岳さんの表記揺れ
+            '行岳祐香吏': '行岳ゆかり',
+            
+            // 千田さんのテストアカウント
+            '千田テスト': '千田哲也',
+            'テスト千田': '千田哲也',
+            'sendatest': '千田哲也',
+            
+            // 冨吉さんの不完全な入力
+            '冨吉': '冨吉亨'
+        };
+        
+        // テストデータとして除外する名前
+        const testNames = ['テスト', '送信テスト', '再申込', ''];
+        
+        // 名前を正規化する関数
+        function normalizeName(name) {
+            if (!name) return null;
+            name = name.trim();
+            
+            // テストデータは除外
+            if (testNames.includes(name)) return null;
+            
+            // マッピングがあれば変換
+            return nameMapping[name] || name;
+        }
+        
         // ページ読み込み時に自動的にCSVファイルを読み込む
         window.addEventListener('DOMContentLoaded', function() {
             fetch('visitor.csv')
@@ -381,9 +414,10 @@
             
             // データを紹介者ごとにグループ化
             data.forEach(row => {
-                const introducerName = row['紹介者'];
+                const originalName = row['紹介者'];
+                const introducerName = normalizeName(originalName);
                 
-                if (!introducerName || introducerName === '') return;
+                if (!introducerName) return; // null（テストデータ等）はスキップ
                 
                 if (!visitorsData[introducerName]) {
                     visitorsData[introducerName] = {
